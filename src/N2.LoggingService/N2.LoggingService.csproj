@@ -9,14 +9,14 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     
     <ImplicitUsings>enable</ImplicitUsings>
-<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-<CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
-<RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
-<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-<RunAnalyzersDuringLiveAnalysis>true</RunAnalyzersDuringLiveAnalysis>
-<EnableNETAnalyzers>true</EnableNETAnalyzers>
-<AnalysisLevel>latest</AnalysisLevel>
-<AnalysisMode>All</AnalysisMode>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <RunAnalyzersDuringLiveAnalysis>true</RunAnalyzersDuringLiveAnalysis>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <AnalysisMode>All</AnalysisMode>
     <ImplicitUsings>enable</ImplicitUsings>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
@@ -26,14 +26,13 @@
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <AnalysisLevel>latest</AnalysisLevel>
     
-
     <Title>N2-Logging</Title>
     <Company>Kaalenco</Company>
     <Copyright>(c) 2024 - rights reserved</Copyright>
     <Authors>gjkaal</Authors>
     <Description>Library for process logging</Description>
     <IncludeSymbols>False</IncludeSymbols>
-    <PackageVersion>1.0.9</PackageVersion>
+    <PackageVersion>1.0.10</PackageVersion>
     <PackageLicenseExpression>AFL-3.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/kaalenco/n2-logging</PackageProjectUrl>
     <PackageId>N2.LoggingService</PackageId>
@@ -43,12 +42,14 @@
     <Product>N2.Core for NET8.0</Product>
     <ProductName>N2.Core</ProductName>
     <ProductVersion>1.0.0</ProductVersion>
+    <Version>1.24.0806</Version>
 
     <RootNamespace>N2.LoggingService</RootNamespace>
     <UserSecretsId>N2-Core-0c368d89-5cb3-4451-9c68-b79e69920a09</UserSecretsId>
-
     <NoWarn>
-      CS1591
+      CS1591,
+      CA2007,
+      CA1308
     </NoWarn>
   </PropertyGroup>
 
