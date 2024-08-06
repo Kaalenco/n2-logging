@@ -157,9 +157,7 @@ public class AzureLogService : ILogService
             try
             {
                 var tableServiceClient = new TableServiceClient(settings.ConnectionString);
-#pragma warning disable CA1308 // Normalize strings to uppercase
                 var tableClient = tableServiceClient.GetTableClient(settings.TableName.ToLowerInvariant());
-#pragma warning restore CA1308 // Normalize strings to uppercase
                 while (LogQueue.TryDequeue(out var logRecord))
                 {
                     await tableClient.AddEntityAsync(logRecord);

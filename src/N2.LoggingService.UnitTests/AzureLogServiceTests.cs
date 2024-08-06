@@ -8,9 +8,9 @@ namespace N2.LoggingService.UnitTests;
 [TestClass]
 public class AzureLogServiceTests
 {
-    private readonly Mock<IHttpContextAccessor> httpAccessorMock = new Mock<IHttpContextAccessor>();
-    private readonly ISettingsService settings;
-    private readonly Mock<IUserContext> userMock = new Mock<IUserContext>();
+    private readonly Mock<IHttpContextAccessor> httpAccessorMock = new ();
+    private readonly SettingsService settings;
+    private readonly Mock<IUserContext> userMock = new ();
     public AzureLogServiceTests()
     {
         settings = new SettingsService();

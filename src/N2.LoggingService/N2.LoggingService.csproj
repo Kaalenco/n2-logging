@@ -27,6 +27,10 @@
 
     <RootNamespace>N2.LoggingService</RootNamespace>
     <UserSecretsId>N2-Core-0c368d89-5cb3-4451-9c68-b79e69920a09</UserSecretsId>
+
+    <NoWarn>
+      CS1591
+    </NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
