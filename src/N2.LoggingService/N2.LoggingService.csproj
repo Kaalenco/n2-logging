@@ -38,7 +38,7 @@
   </ItemGroup> 
 
   <ItemGroup>
-    <PackageReference Include="N2.Core" Version="1.0.9" />
+    <PackageReference Include="N2.Core" Version="1.0.10" />
     <PackageReference Include="N2.Core.Identity.Abstractions" Version="1.0.9" />
     <PackageReference Include="Azure.Data.Tables" Version="12.9.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
