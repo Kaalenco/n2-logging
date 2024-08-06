@@ -19,7 +19,7 @@ jobs:
       name: Set secrets for logging test
       with:
         secrets: ${{ toJSON(secrets) }}
-        secret_filter_regex: AzureLogServiceSettings_*      
+        secret_filter_regex: AZURELOGSERVICESETTINGS__*      
     - uses: actions/checkout@v4
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
