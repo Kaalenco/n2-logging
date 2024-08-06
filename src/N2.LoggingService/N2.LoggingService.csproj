@@ -7,6 +7,25 @@
     <LangVersion>12</LangVersion>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    
+    <ImplicitUsings>enable</ImplicitUsings>
+<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+<CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+<RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+<RunAnalyzersDuringLiveAnalysis>true</RunAnalyzersDuringLiveAnalysis>
+<EnableNETAnalyzers>true</EnableNETAnalyzers>
+<AnalysisLevel>latest</AnalysisLevel>
+<AnalysisMode>All</AnalysisMode>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <RunAnalyzersDuringLiveAnalysis>true</RunAnalyzersDuringLiveAnalysis>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisLevel>latest</AnalysisLevel>
+    
 
     <Title>N2-Logging</Title>
     <Company>Kaalenco</Company>
