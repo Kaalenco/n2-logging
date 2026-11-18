@@ -1,5 +1,11 @@
-# This workflow will build a .NET project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+# Build and test only. Packages are published to vault-packages by the Azure Pipelines
+# pipeline (pipelines/n2-logging-ci-publish.yml); nuget.org releases are done by the
+# central monthly promotion pipeline.
+#
+# Private feed: src/nuget.config maps N2.* to the Azure Artifacts feed vault-packages only,
+# so restore needs credentials. The repository secret NUGET_PAT (a read-only Packaging PAT)
+# must be added by the repository owner. It is exposed to 'dotnet restore' only, through
+# NuGetPackageSourceCredentials_<source name>, and is never echoed.
 
 name: .NET Build and test
 
@@ -9,27 +15,27 @@ on:
   pull_request:
     branches: [ "trunk" ]
 
+permissions:
+  contents: read
+
 jobs:
   build:
 
     runs-on: ubuntu-latest
 
     steps:
-    - uses: Firenza/secrets-to-env@v1.3.0
-      name: Set secrets for logging test
-      with:
-        secrets: ${{ toJSON(secrets) }}
-        secret_filter_regex: AZURELOGSERVICESETTINGS__*      
     - uses: actions/checkout@v4
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: |
+          10.0.x
+          11.0.x
     - name: Restore dependencies
-      run: dotnet restore src
+      env:
+        NuGetPackageSourceCredentials_vault-packages: Username=az;Password=${{ secrets.NUGET_PAT }}
+      run: dotnet restore src/N2.LoggingService.sln
     - name: Build
-      run: dotnet build src --no-restore
+      run: dotnet build src/N2.LoggingService.sln --no-restore --configuration Release
     - name: Test
-      run: dotnet test src --no-build --verbosity normal
-    - name: Publish
-      run: dotnet nuget push **/*.nupkg --api-key ${{ secrets.PACKAGE_N2 }} --source https://api.nuget.org/v3/index.json
+      run: dotnet test src/N2.LoggingService.sln --no-build --configuration Release --verbosity normal

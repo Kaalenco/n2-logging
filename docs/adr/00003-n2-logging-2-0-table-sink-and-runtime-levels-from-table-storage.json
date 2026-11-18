@@ -1,0 +1,9 @@
+{
+  "DateTime": "2026-11-18T00:00:00+01:00",
+  "FileName": "00003-n2-logging-2-0-table-sink-and-runtime-levels-from-table-storage",
+  "RecordId": 3,
+  "TemplateType": "Ad",
+  "Title": "N2.LoggingService 2.0: table sink and runtime levels from Table Storage",
+  "Context": "The 1.x package depends on N2.Core 1.x, reads the log level once, uses a connection string and stores headers, IP address and user name.",
+  "References": {}
+}
