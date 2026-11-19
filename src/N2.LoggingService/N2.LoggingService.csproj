@@ -22,7 +22,7 @@
     <Copyright>(c) 2026 - rights reserved</Copyright>
     <Authors>gjkaal</Authors>
     <Description>Process logging to Azure Table Storage with log levels that can be changed at runtime.</Description>
-    <PackageReleaseNotes>2.1.0: log retention is ON by default. Rows of this application older than 30 days are purged once every 24 hours. Set N2:TableLogging:RetentionDays to 0 to disable it.</PackageReleaseNotes>
+    <PackageReleaseNotes>2.1.1 fixes runtime levels never applying (RowKey was missing from the levels query). 2.1.0: log retention is ON by default. Rows of this application older than 30 days are purged once every 24 hours. Set N2:TableLogging:RetentionDays to 0 to disable it.</PackageReleaseNotes>
     <IncludeSymbols>False</IncludeSymbols>
     <PackageLicenseExpression>AFL-3.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/kaalenco/n2-logging</PackageProjectUrl>
@@ -32,10 +32,10 @@
     <PackageType>Dependency</PackageType>
     <Product>N2.Core</Product>
     <ProductName>N2 Core libraries</ProductName>
-    <Version>2.1.0</Version>
-    <PackageVersion>2.1.0</PackageVersion>
-    <AssemblyVersion>2.1.0</AssemblyVersion>
-    <ProductVersion>2.1.0</ProductVersion>
+    <Version>2.1.1</Version>
+    <PackageVersion>2.1.1</PackageVersion>
+    <AssemblyVersion>2.1.1</AssemblyVersion>
+    <ProductVersion>2.1.1</ProductVersion>
 
     <RootNamespace>N2.LoggingService</RootNamespace>
     <NoWarn>

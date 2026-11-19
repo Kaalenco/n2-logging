@@ -6,6 +6,10 @@ namespace N2.LoggingService;
 /// <summary>Reads the level rows with one <see cref="TableClient"/> and a <see cref="TokenCredential"/>.</summary>
 public sealed class AzureLogLevelTableReader : ILogLevelTableReader
 {
+    /// <summary>Properties requested from the service. RowKey must be listed: with a select list Azure Tables returns only the listed properties.</summary>
+    internal static readonly IReadOnlyList<string> SelectedProperties =
+        [TableLoggingKeys.RowKeyProperty, TableLoggingKeys.LevelProperty];
+
     private readonly TableClient tableClient;
 
     public AzureLogLevelTableReader(TableLoggingSettings settings, TokenCredential credential)
@@ -26,7 +30,7 @@ public sealed class AzureLogLevelTableReader : ILogLevelTableReader
         var result = new List<LogLevelEntry>();
         await foreach (var row in tableClient.QueryAsync<TableEntity>(
             filter,
-            select: [TableLoggingKeys.LevelProperty],
+            select: SelectedProperties,
             cancellationToken: cancellationToken))
         {
             var level = row.GetString(TableLoggingKeys.LevelProperty);

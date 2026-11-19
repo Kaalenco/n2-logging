@@ -14,6 +14,9 @@ public static class TableLoggingKeys
     /// <summary>Name of the level property in a level row.</summary>
     public const string LevelProperty = "Level";
 
+    /// <summary>Name of the row key property. A $select list must name it, or the service omits it.</summary>
+    public const string RowKeyProperty = "RowKey";
+
     /// <summary>Maximum number of operations in one table transaction.</summary>
     public const int MaxTransactionSize = 100;
 
