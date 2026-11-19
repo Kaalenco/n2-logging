@@ -19,6 +19,8 @@ Version 2.x (net10.0 and net11.0) contains:
 - `LogLevelTableConfigurationSource`: reads a levels table every 60 seconds and exposes the
   levels as `Logging:LogLevel:*` configuration keys, so `ILogger` filtering (and the table
   sink) change without a restart.
+- `LogRetentionService` (2.1.0): hosted service that purges log rows older than
+  `RetentionDays` (default 30) from the application's own partition. 0 disables it.
 
 ## Usage
 

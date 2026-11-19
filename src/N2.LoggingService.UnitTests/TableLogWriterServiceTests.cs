@@ -114,6 +114,28 @@ public class TableLogWriterServiceTests
         using var scope = provider.CreateScope();
         Assert.IsInstanceOfType<TableLogService>(scope.ServiceProvider.GetRequiredService<ILogService>());
         Assert.AreEqual(ServiceLifetime.Scoped, LifetimeOf(services));
-        Assert.IsInstanceOfType<TableLogWriterService>(provider.GetServices<IHostedService>().Single());
+        var hosted = provider.GetServices<IHostedService>().ToList();
+        Assert.AreEqual(1, hosted.OfType<TableLogWriterService>().Count());
+        Assert.AreEqual(1, hosted.OfType<LogRetentionService>().Count(), "retention is on by default");
+    }
+
+    [TestMethod]
+    public void RegistrationWithRetentionDaysZeroHasNoRetentionService()
+    {
+        var configuration = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?>
+        {
+            ["N2:TableLogging:TableEndpoint"] = "https://acct.table.core.windows.net",
+            ["N2:TableLogging:RetentionDays"] = "0",
+        }).Build();
+        var services = new ServiceCollection()
+            .AddSingleton(Mock.Of<TokenCredential>())
+            .AddSingleton(TestUsers.Create(true, Guid.NewGuid()))
+            .AddLogging()
+            .AddN2TableLogging(configuration);
+        using var provider = services.BuildServiceProvider();
+
+        var hosted = provider.GetServices<IHostedService>().ToList();
+        Assert.AreEqual(1, hosted.Count);
+        Assert.IsInstanceOfType<TableLogWriterService>(hosted[0]);
     }
 }

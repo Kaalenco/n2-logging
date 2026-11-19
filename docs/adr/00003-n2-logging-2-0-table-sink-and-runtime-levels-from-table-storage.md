@@ -76,3 +76,30 @@ only builds and tests.
 - Records can be lost under sustained table outage or overload; this is visible in
   `TableLogStatistics`, and acceptable for process logging.
 - Consumers that inject `ILogService` into singletons must resolve it per scope.
+
+## Amendment 2.1.0: retention in the package
+
+2.0.0 never deleted log rows, which costs storage and conflicts with GDPR storage
+limitation (the records carry a user id and a trace id). Decision (2026-11-19): the package
+purges its own rows.
+
+- `TableLoggingSettings.RetentionDays` (default 30; 0 or negative disables) and
+  `RetentionRunHours` (default 24, minimum 1).
+- `LogRetentionService` (hosted) is registered by `AddN2TableLogging` only when an endpoint is
+  configured and `RetentionDays` > 0. First run after 5 minutes (off the startup path), then
+  every interval, using `TimeProvider`.
+- Row keys are `reverse ticks (D19) + "-" + guid`, so rows older than the cutoff are the keys
+  `>= D19(MaxTicks - cutoffTicks + 1)`. A row stamped exactly at the cutoff is kept. Only the
+  app's own partition is queried, selecting PartitionKey and RowKey only; deletes are
+  transactions of at most 100, per result page.
+- The purge query is bounded by `RowKey lt ':'` (':' sorts directly after '9'), so non-numeric
+  row keys (level-style rows such as "Default") are never purged.
+- Table access sits behind `ILogRetentionStore` (Azure implementation `AzureLogRetentionStore`),
+  so unit tests need no Azure.
+- A failed run is logged and counted in `TableLogStatistics` (`Purged`, `PurgeFailed`,
+  `LastPurgeError`); it never stops the host. Shutdown cancels the run cleanly.
+- Partitions of app names that are no longer deployed are never purged; retention only runs for the app's own partition.
+- No new permission: Storage Table Data Contributor on the log table already allows delete.
+
+Consequences: hosts that upgrade to 2.1.0 start purging after 30 days of data unless they set
+`RetentionDays` to 0. Rows of other app names in the same table are not touched.

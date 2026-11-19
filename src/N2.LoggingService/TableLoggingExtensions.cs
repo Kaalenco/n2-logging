@@ -68,6 +68,14 @@ public static class TableLoggingExtensions
             new AzureLogTableWriter(settings, sp.GetRequiredService<TokenCredential>()));
         services.TryAddScoped<ILogService, TableLogService>();
         services.AddHostedService<TableLogWriterService>();
+
+        if (settings.IsRetentionEnabled())
+        {
+            services.TryAddSingleton<ILogRetentionStore>(sp =>
+                new AzureLogRetentionStore(settings, sp.GetRequiredService<TokenCredential>()));
+            services.AddHostedService<LogRetentionService>();
+        }
+
         return services;
     }
 }

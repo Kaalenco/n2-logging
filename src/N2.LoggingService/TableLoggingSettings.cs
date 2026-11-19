@@ -41,6 +41,18 @@ public sealed class TableLoggingSettings
     /// <summary>Maximum time, in seconds, to flush the queue on shutdown.</summary>
     public int ShutdownFlushSeconds { get; set; } = 10;
 
+    /// <summary>
+    /// Number of days log rows are kept. Older rows of this application are purged. Zero or a
+    /// negative value disables the purge.
+    /// </summary>
+    public int RetentionDays { get; set; } = 30;
+
+    /// <summary>Upper limit of <see cref="RetentionDays"/> (100 years). Larger values are clamped to it.</summary>
+    public const int MaxRetentionDays = 36500;
+
+    /// <summary>Interval, in hours, between purge runs.</summary>
+    public int RetentionRunHours { get; set; } = 24;
+
     /// <summary>True when an endpoint is configured.</summary>
     public bool IsConfigured => TableEndpoint is not null;
 
@@ -63,6 +75,12 @@ public sealed class TableLoggingSettings
 
     /// <summary>Poll interval, never shorter than one second.</summary>
     public TimeSpan EffectivePollInterval() => TimeSpan.FromSeconds(Math.Max(1, LevelsPollSeconds));
+
+    /// <summary>True when a purge is configured (an endpoint and RetentionDays above zero).</summary>
+    public bool IsRetentionEnabled() => IsConfigured && RetentionDays > 0;
+
+    /// <summary>Purge interval, never shorter than one hour.</summary>
+    public TimeSpan EffectiveRetentionInterval() => TimeSpan.FromHours(Math.Max(1, RetentionRunHours));
 
     /// <summary>Shutdown flush time, never negative.</summary>
     public TimeSpan EffectiveShutdownFlush() => TimeSpan.FromSeconds(Math.Max(0, ShutdownFlushSeconds));

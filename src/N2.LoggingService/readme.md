@@ -45,13 +45,26 @@ Section `N2:TableLogging` (for example environment variable `N2__TableLogging__T
 | `BatchSize` | 100 | records per write (maximum 100) |
 | `LevelsPollSeconds` | 60 | interval for reading the level rows |
 | `ShutdownFlushSeconds` | 10 | maximum time to flush on shutdown |
+| `RetentionDays` | 30 | log rows older than this are purged; 0 or negative disables the purge |
+| `RetentionRunHours` | 24 | interval between purge runs (minimum 1) |
 
 The tables must exist. Give the identity Storage Table Data Contributor on the logs table
-and Storage Table Data Reader on the levels table (the app only reads the levels table).
-Authentication is by `TokenCredential`; no connection string.
+(it covers the delete rights the purge needs) and Storage Table Data Reader on the levels
+table (the app only reads the levels table). Authentication is by `TokenCredential`; no
+connection string.
 
 Privacy: never put names, e-mail addresses, tokens or exception text containing user data in
-`message`. Records have no retention, so the host must purge old rows.
+`message`.
+
+## Retention (since 2.1.0)
+
+When table logging is enabled and `RetentionDays` is above zero, `AddN2TableLogging` also
+registers a hosted `LogRetentionService`. It purges the rows of its own app name partition
+only (each application purges its own rows), five minutes after start and then every
+`RetentionRunHours`. Rows are deleted in transactions of at most 100, paging through the
+result; only the keys are read. A failed run is logged and counted in `TableLogStatistics`
+(`Purged`, `PurgeFailed`, `LastPurgeError`), retried at the next run, and never stops the
+host. Set `RetentionDays` to 0 when the host purges the table some other way.
 
 ## Levels
 

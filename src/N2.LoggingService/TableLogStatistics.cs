@@ -11,6 +11,9 @@ public sealed class TableLogStatistics
     private long written;
     private long failed;
     private string? lastError;
+    private long purged;
+    private long purgeFailed;
+    private string? lastPurgeError;
 
     /// <summary>Records accepted into the queue.</summary>
     public long Enqueued => Interlocked.Read(ref enqueued);
@@ -27,6 +30,15 @@ public sealed class TableLogStatistics
     /// <summary>Message of the most recent write failure, null when none occurred.</summary>
     public string? LastError => Volatile.Read(ref lastError);
 
+    /// <summary>Log rows deleted by the retention purge.</summary>
+    public long Purged => Interlocked.Read(ref purged);
+
+    /// <summary>Retention purge runs that failed.</summary>
+    public long PurgeFailed => Interlocked.Read(ref purgeFailed);
+
+    /// <summary>Message of the most recent purge failure, null when none occurred.</summary>
+    public string? LastPurgeError => Volatile.Read(ref lastPurgeError);
+
     /// <summary>True when records were dropped or lost.</summary>
     public bool HasFailures => Dropped > 0 || Failed > 0;
 
@@ -35,6 +47,14 @@ public sealed class TableLogStatistics
     internal long AddDropped() => Interlocked.Increment(ref dropped);
 
     internal long AddWritten(int count) => Interlocked.Add(ref written, count);
+
+    internal long AddPurged(int count) => Interlocked.Add(ref purged, count);
+
+    internal long AddPurgeFailed(string error)
+    {
+        Volatile.Write(ref lastPurgeError, error);
+        return Interlocked.Increment(ref purgeFailed);
+    }
 
     internal long AddFailed(int count, string error)
     {
