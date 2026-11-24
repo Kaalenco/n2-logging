@@ -12,7 +12,7 @@ With the simple `N2.Core.ILogService` interface, logging is easily added to any 
 method. The service adds context: type, app name, assembly version, trace id and the user id
 (Guid). It stores no headers, IP addresses, user names or e-mail addresses.
 
-Version 2.x (net10.0 and net11.0) contains:
+Version 3.x (net10.0 and net11.0) contains:
 
 - `TableLogService`: `ILogService` that writes to Azure Table Storage through a bounded
   background queue, using a `TokenCredential` (no connection string).

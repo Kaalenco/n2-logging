@@ -1,7 +1,7 @@
 # N2.LoggingService
 
 Process logging to Azure Table Storage, with log levels you can change at runtime.
-Version 2.x targets net10.0 and net11.0 and implements `N2.Core.ILogService`
+Version 3.x targets net10.0 and net11.0 and implements `N2.Core.ILogService`
 (N2.Core.Abstractions 2.x).
 
 ## Installation
