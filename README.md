@@ -47,8 +47,8 @@ The unit tests need no Azure. `src/nuget.config` uses the private feed `vault-pa
 ## Publishing
 
 - Every push to trunk that changes the package is built, tested and pushed to the private
-  feed `vault-packages` by the Azure Pipelines pipeline `pipelines/n2-logging-ci-publish.yml`
+  feed `vault-packages` by the GitHub Actions workflow `.github/workflows/dotnet.yml`
   (existing versions are skipped; bump `Version` in the csproj for a new package).
 - nuget.org releases follow monthly from vault-packages through a central promotion
   pipeline. Nothing is pushed to nuget.org from this repository.
-- The GitHub workflow only builds and tests.
+- The same workflow runs the build and tests on pull requests (no publish).
