@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net10.0;net11.0</TargetFrameworks>
@@ -22,7 +22,10 @@
     <Copyright>(c) 2026 - rights reserved</Copyright>
     <Authors>gjkaal</Authors>
     <Description>Process logging to Azure Table Storage with log levels that can be changed at runtime.</Description>
-    <PackageReleaseNotes>2.1.1 fixes runtime levels never applying (RowKey was missing from the levels query). 2.1.0: log retention is ON by default. Rows of this application older than 30 days are purged once every 24 hours. Set N2:TableLogging:RetentionDays to 0 to disable it.</PackageReleaseNotes>
+    <PackageReleaseNotes>
+      3.0.0 use the updated core abstractions and set the version accordingly
+      2.1.1 fixes runtime levels never applying (RowKey was missing from the levels query). 
+      2.1.0: log retention is ON by default. Rows of this application older than 30 days are purged once every 24 hours. Set N2:TableLogging:RetentionDays to 0 to disable it.</PackageReleaseNotes>
     <IncludeSymbols>False</IncludeSymbols>
     <PackageLicenseExpression>AFL-3.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/kaalenco/n2-logging</PackageProjectUrl>
@@ -32,10 +35,10 @@
     <PackageType>Dependency</PackageType>
     <Product>N2.Core</Product>
     <ProductName>N2 Core libraries</ProductName>
-    <Version>2.1.1</Version>
-    <PackageVersion>2.1.1</PackageVersion>
-    <AssemblyVersion>2.1.1</AssemblyVersion>
-    <ProductVersion>2.1.1</ProductVersion>
+    <Version>3.0.0</Version>
+    <PackageVersion>3.0.0</PackageVersion>
+    <AssemblyVersion>3.0.0</AssemblyVersion>
+    <ProductVersion>3.0.0</ProductVersion>
 
     <RootNamespace>N2.LoggingService</RootNamespace>
     <NoWarn>
@@ -55,36 +58,42 @@
     Microsoft.Extensions.* are not part of Microsoft.NETCore.App, so each target references
     the matching major version (same pattern as N2.Core.Abstractions).
   -->
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net10.0'">
-    <MsExtensionsVersion>10.0.15</MsExtensionsVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net11.0'">
-    <MsExtensionsVersion>11.0.0</MsExtensionsVersion>
-  </PropertyGroup>
-
   <ItemGroup>
     <None Include="readme.md" Pack="true" PackagePath="\" />
     <InternalsVisibleTo Include="N2.LoggingService.UnitTests" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="N2.Core.Abstractions" Version="2.0.0" />
+    <PackageReference Include="N2.Core.Abstractions" Version="3.0.0" />
     <PackageReference Include="Azure.Core" Version="1.65.0" />
     <PackageReference Include="Azure.Data.Tables" Version="12.13.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="$(MsExtensionsVersion)" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="$(MsExtensionsVersion)" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="$(MsExtensionsVersion)" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="$(MsExtensionsVersion)" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="$(MsExtensionsVersion)" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="$(MsExtensionsVersion)" />
+
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.15" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.15" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.15" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.15" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.15" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.15" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net11.0'">
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="11.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="11.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="11.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="11.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="11.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="11.0.0" />
   </ItemGroup>
 
   <ItemGroup Label="Analyzers">
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.404">
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="11.0.100">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="5.0.0">
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="5.12.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -100,7 +109,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="10.36.0.15337">
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="10.37.0.15768">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
