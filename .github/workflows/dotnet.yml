@@ -1,13 +1,13 @@
-# Build and test only. Packages are published to vault-packages by the Azure Pipelines
-# pipeline (pipelines/n2-logging-ci-publish.yml); nuget.org releases are done by the
-# central monthly promotion pipeline.
+# Build, test and publish N2.LoggingService.
+# Pushes to trunk publish the package to the private feed vault-packages (an existing version
+# is skipped, so only a version bump publishes). nuget.org releases are done by the central
+# monthly promotion pipeline.
 #
-# Private feed: src/nuget.config maps N2.* to the Azure Artifacts feed vault-packages only,
-# so restore needs credentials. The repository secret NUGET_PAT (a read-only Packaging PAT)
-# must be added by the repository owner. It is exposed to 'dotnet restore' only, through
-# NuGetPackageSourceCredentials_<source name>, and is never echoed.
+# Private feed: src/nuget.config maps N2.* to the Azure Artifacts feed vault-packages, so
+# restore needs credentials. The repository secret NUGET_PAT (a Packaging read and write PAT)
+# is added to the runner's copy of src/nuget.config only; it is never committed or echoed.
 
-name: .NET Build and test
+name: .NET Build, test and publish
 
 on:
   push:
@@ -24,18 +24,41 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+    - uses: actions/checkout@v5
+    - name: Setup .NET 10.0 and 11.0
+      uses: actions/setup-dotnet@v5
       with:
         dotnet-version: |
           10.0.x
           11.0.x
-    - name: Restore dependencies
+    - name: Authenticate to vault-packages
       env:
-        NuGetPackageSourceCredentials_vault-packages: Username=az;Password=${{ secrets.NUGET_PAT }}
-      run: dotnet restore src/N2.LoggingService.sln
+        NUGET_PAT: ${{ secrets.NUGET_PAT }}
+      run: |
+        if [ -z "$NUGET_PAT" ]; then
+          echo "::error::Repository secret NUGET_PAT is not set; cannot restore N2.* packages from vault-packages."
+          exit 1
+        fi
+        dotnet nuget update source vault-packages --username az --password "$NUGET_PAT" --store-password-in-clear-text --configfile src/nuget.config
+    - name: Restore dependencies
+      run: dotnet restore src
+    # Release build; GeneratePackageOnBuild=True makes it produce the .nupkg as well.
     - name: Build
-      run: dotnet build src/N2.LoggingService.sln --no-restore --configuration Release
+      run: dotnet build src --no-restore --configuration Release
     - name: Test
-      run: dotnet test src/N2.LoggingService.sln --no-build --configuration Release --verbosity normal
+      run: dotnet test src --no-build --configuration Release --verbosity normal --filter "TestCategory!=Integration"
+    # Pushes to trunk only. Azure Artifacts ignores the api-key value.
+    - name: Publish to vault-packages
+      if: github.event_name == 'push' && github.ref == 'refs/heads/trunk'
+      working-directory: src
+      run: |
+        set -euo pipefail
+        shopt -s nullglob
+        packages=(N2.LoggingService/bin/Release/*.nupkg)
+        if [ ${#packages[@]} -eq 0 ]; then
+          echo "::error::No *.nupkg found in N2.LoggingService/bin/Release; nothing to publish."
+          exit 1
+        fi
+        for pkg in "${packages[@]}"; do
+          dotnet nuget push "$pkg" --source vault-packages --api-key az --skip-duplicate
+        done
