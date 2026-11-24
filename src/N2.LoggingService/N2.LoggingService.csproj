@@ -66,8 +66,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- TODO bump to 3.0.1 after N2.Core.Abstractions 3.0.1 is published -->
-    <PackageReference Include="N2.Core.Abstractions" Version="3.0.0" />
+    <PackageReference Include="N2.Core.Abstractions" Version="3.0.1" />
     <PackageReference Include="Azure.Core" Version="1.65.0" />
     <PackageReference Include="Azure.Data.Tables" Version="12.13.0" />
 
